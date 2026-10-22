@@ -74,47 +74,6 @@
       }
     },
     {
-      "name": "gpt-image-2 standard result",
-      "hook": "protocols",
-      "path": [
-        "openai_image",
-        "render"
-      ],
-      "args": [
-        {},
-        {
-          "task_id": "task_public",
-          "status": "SUCCESS",
-          "progress": "100%",
-          "data": {
-            "code": 200,
-            "data": {
-              "id": "task_fixture",
-              "progress": 100,
-              "result": {
-                "images": [
-                  {
-                    "expires_at": 1792746432,
-                    "url": [
-                      "https://fixture.example/gpt-image-2.png"
-                    ]
-                  }
-                ]
-              },
-              "status": "completed"
-            }
-          }
-        }
-      ],
-      "expected": {
-        "data": [
-          {
-            "url": "https://fixture.example/gpt-image-2.png"
-          }
-        ]
-      }
-    },
-    {
       "name": "gpt-image-2 result artifacts",
       "hook": "listArtifacts",
       "args": [
@@ -253,75 +212,6 @@
         "image_tokens": 0,
         "cached_text_tokens": 0,
         "cached_image_tokens": 0
-      }
-    },
-    {
-      "name": "gpt-image-2.5-flare standard result",
-      "hook": "protocols",
-      "path": [
-        "openai_image",
-        "render"
-      ],
-      "args": [
-        {},
-        {
-          "task_id": "task_public",
-          "status": "SUCCESS",
-          "progress": "100%",
-          "data": {
-            "code": 200,
-            "data": {
-              "id": "task_fixture",
-              "progress": 100,
-              "result": {
-                "images": [
-                  {
-                    "expires_at": 1792746445,
-                    "url": [
-                      "https://fixture.example/gpt-image-2.5-flare.png"
-                    ]
-                  }
-                ]
-              },
-              "status": "completed",
-              "usage": {
-                "input_tokens": 16,
-                "input_tokens_details": {
-                  "cached_tokens": 0,
-                  "image_tokens": 0,
-                  "text_tokens": 16
-                },
-                "output_tokens": 196,
-                "output_tokens_details": {
-                  "image_tokens": 196,
-                  "text_tokens": 0
-                },
-                "total_tokens": 212
-              }
-            }
-          }
-        }
-      ],
-      "expected": {
-        "data": [
-          {
-            "url": "https://fixture.example/gpt-image-2.5-flare.png"
-          }
-        ],
-        "usage": {
-          "input_tokens": 16,
-          "input_tokens_details": {
-            "cached_tokens": 0,
-            "image_tokens": 0,
-            "text_tokens": 16
-          },
-          "output_tokens": 196,
-          "output_tokens_details": {
-            "image_tokens": 196,
-            "text_tokens": 0
-          },
-          "total_tokens": 212
-        }
       }
     },
     {
@@ -657,10 +547,9 @@
     },
     {
       "name": "plain Image 2 cannot silently accept high",
-      "hook": "protocols",
+      "hook": "native",
       "path": [
-        "openai_image",
-        "decodeRequest"
+        "decodeImage"
       ],
       "args": [
         {
@@ -678,10 +567,9 @@
     },
     {
       "name": "token image count is bounded",
-      "hook": "protocols",
+      "hook": "native",
       "path": [
-        "openai_image",
-        "decodeRequest"
+        "decodeImage"
       ],
       "args": [
         {
@@ -699,10 +587,9 @@
     },
     {
       "name": "nested count is bounded",
-      "hook": "protocols",
+      "hook": "native",
       "path": [
-        "openai_image",
-        "decodeRequest"
+        "decodeImage"
       ],
       "args": [
         {
@@ -722,10 +609,9 @@
     },
     {
       "name": "transparent JPEG is rejected",
-      "hook": "protocols",
+      "hook": "native",
       "path": [
-        "openai_image",
-        "decodeRequest"
+        "decodeImage"
       ],
       "args": [
         {
@@ -744,10 +630,9 @@
     },
     {
       "name": "unaligned token image dimensions are rejected",
-      "hook": "protocols",
+      "hook": "native",
       "path": [
-        "openai_image",
-        "decodeRequest"
+        "decodeImage"
       ],
       "args": [
         {
@@ -765,10 +650,9 @@
     },
     {
       "name": "request callback cannot bypass gateway",
-      "hook": "protocols",
+      "hook": "native",
       "path": [
-        "openai_image",
-        "decodeRequest"
+        "decodeImage"
       ],
       "args": [
         {

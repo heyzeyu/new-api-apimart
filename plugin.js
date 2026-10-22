@@ -19,8 +19,9 @@ const VIDEO_MODELS = {
   "kling-video-o1": { kind: "video", maxSeconds: 10, durations: [5, 10], references: 7, omni: true },
 };
 const MODELS = Object.assign({}, IMAGE_MODELS, VIDEO_MODELS);
+// Publish video models only. Keep image codecs for historical task snapshots,
+// without registering image models, image routes, or image protocol bindings.
 // Keep endpoint declarations statically readable by the upload preview.
-const IMAGE_MODEL_NAMES = ["gpt-image-2", "gpt-image-2-ext", "gpt-image-2-official", "gpt-image-2.5-flare", "gpt-image-2.5-sunburst", "gpt-image-2.5-ext"];
 const VIDEO_MODEL_NAMES = ["kling-v2-6", "kling-v3", "kling-3.0-turbo", "kling-v3-omni", "kling-video-o1"];
 const RATIOS = ["1:1", "3:2", "2:3", "4:3", "3:4", "5:4", "4:5", "16:9", "9:16", "2:1", "1:2", "21:9", "9:21", "3:1", "1:3"];
 const EXT_RATIOS = ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "2:3", "5:4", "4:5", "21:9"];
@@ -76,19 +77,13 @@ export const meta = {
   key: "apimart",
   name: "APIMart",
   icon: "text:AM",
-  version: "0.1.0",
+  version: "0.1.1",
   author: { name: "heyzeyu", url: "https://github.com/heyzeyu" },
   website: "https://github.com/heyzeyu/new-api-apimart",
-  description: { en: "APIMart image and Kling video generation", zh: "APIMart 图片与可灵视频生成" },
+  description: { en: "APIMart Kling video generation", zh: "APIMart 可灵视频生成" },
   baseUrl: "https://api.apimart.ai",
   auth: "api_key",
   models: [
-    "gpt-image-2",
-    "gpt-image-2-ext",
-    "gpt-image-2-official",
-    "gpt-image-2.5-flare",
-    "gpt-image-2.5-sunburst",
-    "gpt-image-2.5-ext",
     "kling-v2-6",
     "kling-v3",
     "kling-3.0-turbo",
@@ -97,18 +92,8 @@ export const meta = {
   ],
   fetchMode: "per_task",
   upstreams: ["vendor", "new_api"],
-  usageSchema: IMAGE_SCHEMA,
+  usageSchema: VIDEO_SCHEMA,
   usageProfiles: [
-    {
-      models: ["gpt-image-2-official"],
-      schema: TOKEN_SCHEMA,
-      examples: [{ label: "1K medium", facts: Object.assign({}, TOKEN_EXAMPLE, { output_tokens: 1056 }) }],
-    },
-    { models: ["gpt-image-2.5-flare", "gpt-image-2.5-sunburst"], schema: EXTENDED_TOKEN_SCHEMA, examples: [{ label: "1K medium", facts: TOKEN_EXAMPLE }] },
-    {
-      models: ["gpt-image-2.5-ext"],
-      schema: Object.assign({}, IMAGE_SCHEMA, { version: { enum: ["flare", "sunburst"], description: { en: "Image model version", zh: "图片模型版本" } } }),
-    },
     { models: ["kling-v2-6", "kling-video-o1"], schema: VIDEO_SCHEMA },
     {
       models: ["kling-v3", "kling-v3-omni"],
@@ -120,14 +105,12 @@ export const meta = {
     },
   ],
   routes: [
-    { method: "POST", path: "/apimart/v1/images/generations", type: "submit", models: IMAGE_MODEL_NAMES, decode: "decodeImage", render: "taskCreated" },
     { method: "POST", path: "/apimart/v1/videos/generations", type: "submit", models: VIDEO_MODEL_NAMES, decode: "decodeVideo", render: "taskCreated" },
     { method: "GET", path: "/apimart/v1/tasks/:task_id", type: "query", render: "taskStatus" },
   ],
   protocols: [
-    { name: "openai_image", models: IMAGE_MODEL_NAMES },
     { name: "openai_video", models: VIDEO_MODEL_NAMES },
-    { name: "openai_responses", supports: ["stream", "sync", "background"] },
+    { name: "openai_responses", models: VIDEO_MODEL_NAMES, supports: ["stream", "sync", "background"] },
   ],
 };
 
@@ -758,23 +741,6 @@ function responseText(ctx, task) {
   return parts.join("\n");
 }
 export const protocols = {
-  openai_image: {
-    decodeRequest: function (ctx) {
-      return decodedRequest(ctx, "image", false);
-    },
-    render: function (_ctx, task) {
-      const data = task.data && task.data.data,
-        images = mediaEntries(data, "images");
-      if (!images.length) throw new Error("APIMart image result is empty");
-      const result = {
-        data: images.map(function (entry) {
-          return entry.url ? { url: entry.url } : { b64_json: entry.b64_json };
-        }),
-      };
-      if (data.usage) result.usage = data.usage;
-      return result;
-    },
-  },
   openai_video: {
     decodeRequest: function (ctx) {
       return decodedRequest(ctx, "video", false);

@@ -17,9 +17,14 @@ for (const entry of fixture.cases) {
   });
 }
 
-test('declared models have isolated image/video bindings and valid submit requests', () => {
-  const images = plugin.meta.protocols.find(claim => claim.name === 'openai_image').models;
+test('declared video models retain submit contracts without claiming image requests', () => {
+  const images = plugin.meta.protocols.find(claim => claim.name === 'openai_image')?.models || [];
   const videos = plugin.meta.protocols.find(claim => claim.name === 'openai_video').models;
+  assert.equal(images.length, 0);
+  assert.equal(plugin.meta.models.length, 5);
+  assert.deepEqual(plugin.meta.protocols.find(claim => claim.name === 'openai_responses').models, videos);
+  assert.ok(plugin.meta.models.every(model => model.startsWith('kling-')));
+  assert.ok(plugin.meta.routes.every(route => !route.path.includes('/images/')));
   assert.deepEqual([...images, ...videos].sort(), [...plugin.meta.models].sort());
   assert.equal(new Set(plugin.meta.models).size, plugin.meta.models.length);
   for (const model of plugin.meta.models) {

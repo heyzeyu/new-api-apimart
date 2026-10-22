@@ -1,0 +1,899 @@
+{
+  "cases": [
+    {
+      "name": "gpt-image-2 real terminal response",
+      "hook": "parseTaskResult",
+      "args": [
+        {
+          "model": "gpt-image-2",
+          "upstreamModel": "gpt-image-2",
+          "state": {
+            "hasInputImages": false
+          }
+        },
+        {
+          "code": 200,
+          "data": {
+            "id": "task_fixture",
+            "progress": 100,
+            "result": {
+              "images": [
+                {
+                  "expires_at": 1792746432,
+                  "url": [
+                    "https://fixture.example/gpt-image-2.png"
+                  ]
+                }
+              ]
+            },
+            "status": "completed"
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUCCESS",
+        "progress": "100%"
+      }
+    },
+    {
+      "name": "gpt-image-2 measured usage",
+      "hook": "extractUsageOnComplete",
+      "args": [
+        {
+          "model": "gpt-image-2",
+          "upstreamModel": "gpt-image-2",
+          "state": {
+            "hasInputImages": false
+          }
+        },
+        {
+          "status": "SUCCESS",
+          "progress": "100%"
+        },
+        {
+          "code": 200,
+          "data": {
+            "id": "task_fixture",
+            "progress": 100,
+            "result": {
+              "images": [
+                {
+                  "expires_at": 1792746432,
+                  "url": [
+                    "https://fixture.example/gpt-image-2.png"
+                  ]
+                }
+              ]
+            },
+            "status": "completed"
+          }
+        }
+      ],
+      "expected": {
+        "image_count": 1
+      }
+    },
+    {
+      "name": "gpt-image-2 standard result",
+      "hook": "protocols",
+      "path": [
+        "openai_image",
+        "render"
+      ],
+      "args": [
+        {},
+        {
+          "task_id": "task_public",
+          "status": "SUCCESS",
+          "progress": "100%",
+          "data": {
+            "code": 200,
+            "data": {
+              "id": "task_fixture",
+              "progress": 100,
+              "result": {
+                "images": [
+                  {
+                    "expires_at": 1792746432,
+                    "url": [
+                      "https://fixture.example/gpt-image-2.png"
+                    ]
+                  }
+                ]
+              },
+              "status": "completed"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "data": [
+          {
+            "url": "https://fixture.example/gpt-image-2.png"
+          }
+        ]
+      }
+    },
+    {
+      "name": "gpt-image-2 result artifacts",
+      "hook": "listArtifacts",
+      "args": [
+        {
+          "task_id": "task_public",
+          "status": "SUCCESS",
+          "progress": "100%",
+          "data": {
+            "code": 200,
+            "data": {
+              "id": "task_fixture",
+              "progress": 100,
+              "result": {
+                "images": [
+                  {
+                    "expires_at": 1792746432,
+                    "url": [
+                      "https://fixture.example/gpt-image-2.png"
+                    ]
+                  }
+                ]
+              },
+              "status": "completed"
+            }
+          }
+        }
+      ],
+      "expected": [
+        {
+          "key": "image_0",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "gpt-image-2.5-flare real terminal response",
+      "hook": "parseTaskResult",
+      "args": [
+        {
+          "model": "gpt-image-2.5-flare",
+          "upstreamModel": "gpt-image-2.5-flare",
+          "state": {
+            "hasInputImages": false
+          }
+        },
+        {
+          "code": 200,
+          "data": {
+            "id": "task_fixture",
+            "progress": 100,
+            "result": {
+              "images": [
+                {
+                  "expires_at": 1792746445,
+                  "url": [
+                    "https://fixture.example/gpt-image-2.5-flare.png"
+                  ]
+                }
+              ]
+            },
+            "status": "completed",
+            "usage": {
+              "input_tokens": 16,
+              "input_tokens_details": {
+                "cached_tokens": 0,
+                "image_tokens": 0,
+                "text_tokens": 16
+              },
+              "output_tokens": 196,
+              "output_tokens_details": {
+                "image_tokens": 196,
+                "text_tokens": 0
+              },
+              "total_tokens": 212
+            }
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUCCESS",
+        "progress": "100%"
+      }
+    },
+    {
+      "name": "gpt-image-2.5-flare measured usage",
+      "hook": "extractUsageOnComplete",
+      "args": [
+        {
+          "model": "gpt-image-2.5-flare",
+          "upstreamModel": "gpt-image-2.5-flare",
+          "state": {
+            "hasInputImages": false
+          }
+        },
+        {
+          "status": "SUCCESS",
+          "progress": "100%"
+        },
+        {
+          "code": 200,
+          "data": {
+            "id": "task_fixture",
+            "progress": 100,
+            "result": {
+              "images": [
+                {
+                  "expires_at": 1792746445,
+                  "url": [
+                    "https://fixture.example/gpt-image-2.5-flare.png"
+                  ]
+                }
+              ]
+            },
+            "status": "completed",
+            "usage": {
+              "input_tokens": 16,
+              "input_tokens_details": {
+                "cached_tokens": 0,
+                "image_tokens": 0,
+                "text_tokens": 16
+              },
+              "output_tokens": 196,
+              "output_tokens_details": {
+                "image_tokens": 196,
+                "text_tokens": 0
+              },
+              "total_tokens": 212
+            }
+          }
+        }
+      ],
+      "expected": {
+        "image_count": 1,
+        "output_tokens": 196,
+        "text_tokens": 16,
+        "image_tokens": 0,
+        "cached_text_tokens": 0,
+        "cached_image_tokens": 0
+      }
+    },
+    {
+      "name": "gpt-image-2.5-flare standard result",
+      "hook": "protocols",
+      "path": [
+        "openai_image",
+        "render"
+      ],
+      "args": [
+        {},
+        {
+          "task_id": "task_public",
+          "status": "SUCCESS",
+          "progress": "100%",
+          "data": {
+            "code": 200,
+            "data": {
+              "id": "task_fixture",
+              "progress": 100,
+              "result": {
+                "images": [
+                  {
+                    "expires_at": 1792746445,
+                    "url": [
+                      "https://fixture.example/gpt-image-2.5-flare.png"
+                    ]
+                  }
+                ]
+              },
+              "status": "completed",
+              "usage": {
+                "input_tokens": 16,
+                "input_tokens_details": {
+                  "cached_tokens": 0,
+                  "image_tokens": 0,
+                  "text_tokens": 16
+                },
+                "output_tokens": 196,
+                "output_tokens_details": {
+                  "image_tokens": 196,
+                  "text_tokens": 0
+                },
+                "total_tokens": 212
+              }
+            }
+          }
+        }
+      ],
+      "expected": {
+        "data": [
+          {
+            "url": "https://fixture.example/gpt-image-2.5-flare.png"
+          }
+        ],
+        "usage": {
+          "input_tokens": 16,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "image_tokens": 0,
+            "text_tokens": 16
+          },
+          "output_tokens": 196,
+          "output_tokens_details": {
+            "image_tokens": 196,
+            "text_tokens": 0
+          },
+          "total_tokens": 212
+        }
+      }
+    },
+    {
+      "name": "gpt-image-2.5-flare result artifacts",
+      "hook": "listArtifacts",
+      "args": [
+        {
+          "task_id": "task_public",
+          "status": "SUCCESS",
+          "progress": "100%",
+          "data": {
+            "code": 200,
+            "data": {
+              "id": "task_fixture",
+              "progress": 100,
+              "result": {
+                "images": [
+                  {
+                    "expires_at": 1792746445,
+                    "url": [
+                      "https://fixture.example/gpt-image-2.5-flare.png"
+                    ]
+                  }
+                ]
+              },
+              "status": "completed",
+              "usage": {
+                "input_tokens": 16,
+                "input_tokens_details": {
+                  "cached_tokens": 0,
+                  "image_tokens": 0,
+                  "text_tokens": 16
+                },
+                "output_tokens": 196,
+                "output_tokens_details": {
+                  "image_tokens": 196,
+                  "text_tokens": 0
+                },
+                "total_tokens": 212
+              }
+            }
+          }
+        }
+      ],
+      "expected": [
+        {
+          "key": "image_0",
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "kling-v3 real terminal response",
+      "hook": "parseTaskResult",
+      "args": [
+        {
+          "model": "kling-v3",
+          "upstreamModel": "kling-v3",
+          "state": {
+            "hasInputImages": false
+          }
+        },
+        {
+          "code": 200,
+          "data": {
+            "id": "task_fixture",
+            "progress": 100,
+            "result": {
+              "videos": [
+                {
+                  "expires_at": 1792746582,
+                  "url": [
+                    "https://fixture.example/kling-v3.mp4"
+                  ]
+                }
+              ]
+            },
+            "status": "completed"
+          }
+        }
+      ],
+      "expected": {
+        "status": "SUCCESS",
+        "progress": "100%",
+        "url": "https://fixture.example/kling-v3.mp4"
+      }
+    },
+    {
+      "name": "kling-v3 measured usage",
+      "hook": "extractUsageOnComplete",
+      "args": [
+        {
+          "model": "kling-v3",
+          "upstreamModel": "kling-v3",
+          "state": {
+            "hasInputImages": false
+          }
+        },
+        {
+          "status": "SUCCESS",
+          "progress": "100%",
+          "url": "https://fixture.example/kling-v3.mp4"
+        },
+        {
+          "code": 200,
+          "data": {
+            "id": "task_fixture",
+            "progress": 100,
+            "result": {
+              "videos": [
+                {
+                  "expires_at": 1792746582,
+                  "url": [
+                    "https://fixture.example/kling-v3.mp4"
+                  ]
+                }
+              ]
+            },
+            "status": "completed"
+          }
+        }
+      ],
+      "expected": {}
+    },
+    {
+      "name": "kling-v3 standard result",
+      "hook": "protocols",
+      "path": [
+        "openai_video",
+        "render"
+      ],
+      "args": [
+        {},
+        {
+          "task_id": "task_public",
+          "status": "SUCCESS",
+          "progress": "100%",
+          "data": {
+            "code": 200,
+            "data": {
+              "id": "task_fixture",
+              "progress": 100,
+              "result": {
+                "videos": [
+                  {
+                    "expires_at": 1792746582,
+                    "url": [
+                      "https://fixture.example/kling-v3.mp4"
+                    ]
+                  }
+                ]
+              },
+              "status": "completed"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "url": "https://fixture.example/kling-v3.mp4"
+      }
+    },
+    {
+      "name": "kling-v3 result artifacts",
+      "hook": "listArtifacts",
+      "args": [
+        {
+          "task_id": "task_public",
+          "status": "SUCCESS",
+          "progress": "100%",
+          "data": {
+            "code": 200,
+            "data": {
+              "id": "task_fixture",
+              "progress": 100,
+              "result": {
+                "videos": [
+                  {
+                    "expires_at": 1792746582,
+                    "url": [
+                      "https://fixture.example/kling-v3.mp4"
+                    ]
+                  }
+                ]
+              },
+              "status": "completed"
+            }
+          }
+        }
+      ],
+      "expected": [
+        {
+          "key": "video",
+          "type": "video"
+        }
+      ]
+    },
+    {
+      "name": "usage facts are not legacy ratios",
+      "hook": "extractUsage",
+      "args": [
+        {
+          "usagePurpose": "billing_ratios"
+        }
+      ],
+      "expected": null
+    },
+    {
+      "name": "unknown task status stays unknown",
+      "hook": "parseTaskResult",
+      "args": [
+        {
+          "model": "gpt-image-2"
+        },
+        {
+          "code": 200,
+          "data": {
+            "status": "unknown_status"
+          }
+        }
+      ],
+      "expected": {
+        "status": "UNKNOWN",
+        "reason": "Unrecognized APIMart task status"
+      }
+    },
+    {
+      "name": "completed without media is not success",
+      "hook": "parseTaskResult",
+      "args": [
+        {
+          "model": "gpt-image-2"
+        },
+        {
+          "code": 200,
+          "data": {
+            "status": "completed",
+            "result": {
+              "images": [
+                {
+                  "revised_prompt": "fixture"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "expected": {
+        "status": "UNKNOWN",
+        "reason": "APIMart completed without a media result"
+      }
+    },
+    {
+      "name": "CDN requests carry no channel credentials",
+      "hook": "buildContentRequest",
+      "args": [
+        {
+          "artifactKey": "image_0",
+          "apiKey": "fixture-only",
+          "clientRequest": {
+            "method": "GET"
+          },
+          "data": {
+            "data": {
+              "result": {
+                "images": [
+                  {
+                    "url": [
+                      "https://cdn.example/image.png"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "expected": {
+        "url": "https://cdn.example/image.png",
+        "method": "GET",
+        "credentialless": true
+      }
+    },
+    {
+      "name": "chained New API queries use native prefix",
+      "hook": "buildQueryRequest",
+      "args": [
+        {
+          "baseUrl": "https://gateway.example",
+          "apiKey": "fixture-only",
+          "taskId": "task_public",
+          "upstream": {
+            "kind": "new_api"
+          }
+        }
+      ],
+      "expected": {
+        "url": "https://gateway.example/apimart/v1/tasks/task_public",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer fixture-only"
+        }
+      }
+    },
+    {
+      "name": "Ext create response preserves public identity",
+      "hook": "native",
+      "path": [
+        "taskCreated"
+      ],
+      "args": [
+        {},
+        {
+          "task_id": "task_public",
+          "data": {
+            "data": {
+              "id": "task_fixture",
+              "object": "generation.task"
+            }
+          }
+        }
+      ],
+      "expected": {
+        "code": 200,
+        "data": {
+          "id": "task_public",
+          "object": "generation.task",
+          "type": "image",
+          "status": "pending",
+          "progress": 0,
+          "poll_url": "/apimart/v1/tasks/task_public"
+        }
+      }
+    },
+    {
+      "name": "plain Image 2 cannot silently accept high",
+      "hook": "protocols",
+      "path": [
+        "openai_image",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "gpt-image-2",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "quality": "high"
+            }
+          }
+        }
+      ],
+      "expectedError": "quality is not supported"
+    },
+    {
+      "name": "token image count is bounded",
+      "hook": "protocols",
+      "path": [
+        "openai_image",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "gpt-image-2.5-flare",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "n": 5
+            }
+          }
+        }
+      ],
+      "expectedError": "n must"
+    },
+    {
+      "name": "nested count is bounded",
+      "hook": "protocols",
+      "path": [
+        "openai_image",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "gpt-image-2.5-flare",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "metadata": {
+                "n": 2147483648
+              }
+            }
+          }
+        }
+      ],
+      "expectedError": "n must"
+    },
+    {
+      "name": "transparent JPEG is rejected",
+      "hook": "protocols",
+      "path": [
+        "openai_image",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "gpt-image-2.5-flare",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "background": "transparent",
+              "output_format": "jpeg"
+            }
+          }
+        }
+      ],
+      "expectedError": "PNG or WebP"
+    },
+    {
+      "name": "unaligned token image dimensions are rejected",
+      "hook": "protocols",
+      "path": [
+        "openai_image",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "gpt-image-2.5-flare",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "size": "1664x2225"
+            }
+          }
+        }
+      ],
+      "expectedError": "dimensions"
+    },
+    {
+      "name": "request callback cannot bypass gateway",
+      "hook": "protocols",
+      "path": [
+        "openai_image",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "gpt-image-2",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "webhook": "https://callback.example"
+            }
+          }
+        }
+      ],
+      "expectedError": "callback"
+    },
+    {
+      "name": "video duration zero is rejected",
+      "hook": "protocols",
+      "path": [
+        "openai_video",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "kling-v3",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "seconds": 0
+            }
+          }
+        }
+      ],
+      "expectedError": "duration must"
+    },
+    {
+      "name": "nested video duration is bounded",
+      "hook": "protocols",
+      "path": [
+        "openai_video",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "kling-v3",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "metadata": {
+                "duration": 3601
+              }
+            }
+          }
+        }
+      ],
+      "expectedError": "duration must"
+    },
+    {
+      "name": "O1 accepts only documented durations",
+      "hook": "protocols",
+      "path": [
+        "openai_video",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "kling-video-o1",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "duration": 3
+            }
+          }
+        }
+      ],
+      "expectedError": "only 5 or 10"
+    },
+    {
+      "name": "Kling 2.6 audio needs pro",
+      "hook": "protocols",
+      "path": [
+        "openai_video",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "kling-v2-6",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "audio": true
+            }
+          }
+        }
+      ],
+      "expectedError": "compatible pro"
+    },
+    {
+      "name": "unmeasured video editing is rejected",
+      "hook": "protocols",
+      "path": [
+        "openai_video",
+        "decodeRequest"
+      ],
+      "args": [
+        {
+          "model": "kling-v3-omni",
+          "body": {
+            "kind": "json",
+            "value": {
+              "prompt": "fixture",
+              "video_list": [
+                {
+                  "video_url": "https://media.example/input.mp4"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "expectedError": "Reference-video editing"
+    }
+  ]
+}

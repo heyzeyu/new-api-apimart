@@ -1,0 +1,16 @@
+{
+  "name": "new-api-apimart",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "description": "Standalone APIMart task plugin for new-api",
+  "scripts": {
+    "test": "node --test test/plugin.test.mjs",
+    "check": "node --check plugin.js && node scripts/marketplace.mjs --check && node --test test/plugin.test.mjs",
+    "marketplace": "node scripts/marketplace.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

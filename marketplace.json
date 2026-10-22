@@ -1,0 +1,73 @@
+{
+  "indexVersion": 1,
+  "name": "new-api-apimart",
+  "plugins": [
+    {
+      "key": "apimart",
+      "name": "APIMart",
+      "icon": "text:AM",
+      "website": "https://github.com/heyzeyu/new-api-apimart",
+      "description": {
+        "en": "APIMart image and Kling video generation",
+        "zh": "APIMart 图片与可灵视频生成"
+      },
+      "models": [
+        "gpt-image-2",
+        "gpt-image-2-ext",
+        "gpt-image-2-official",
+        "gpt-image-2.5-flare",
+        "gpt-image-2.5-sunburst",
+        "gpt-image-2.5-ext",
+        "kling-v2-6",
+        "kling-v3",
+        "kling-3.0-turbo",
+        "kling-v3-omni",
+        "kling-video-o1"
+      ],
+      "protocols": [
+        {
+          "name": "openai_image",
+          "models": [
+            "gpt-image-2",
+            "gpt-image-2-ext",
+            "gpt-image-2-official",
+            "gpt-image-2.5-flare",
+            "gpt-image-2.5-sunburst",
+            "gpt-image-2.5-ext"
+          ]
+        },
+        {
+          "name": "openai_video",
+          "models": [
+            "kling-v2-6",
+            "kling-v3",
+            "kling-3.0-turbo",
+            "kling-v3-omni",
+            "kling-video-o1"
+          ]
+        },
+        {
+          "name": "openai_responses",
+          "supports": [
+            "stream",
+            "sync",
+            "background"
+          ]
+        }
+      ],
+      "latest": "0.1.0",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "path": "https://raw.githubusercontent.com/heyzeyu/new-api-apimart/v0.1.0/plugin.js",
+          "sha256": "07ec4b5ebc165f343e89511929735695c168be8dd5d00af5c0e4ae989af47e1e",
+          "minApiVersion": 1,
+          "kind": "task",
+          "baseUrl": "https://api.apimart.ai",
+          "auth": "api_key",
+          "allowedHosts": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+new-api-apimart
+Copyright 2026 heyzeyu contributors
+
+This standalone plugin targets new-api by QuantumNous:
+https://github.com/QuantumNous/new-api
+
+Protocol presentation and integration patterns follow QuantumNous/new-api's
+Task Plugin API v1, under the GNU Affero General Public License, version 3.
+Original new-api and QuantumNous attribution is preserved.
+
+This is a community-maintained integration, not an official APIMart or Kling SDK.
+Development was assisted by OpenAI Codex. See LICENSE for redistribution terms.

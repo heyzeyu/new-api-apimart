@@ -50,13 +50,33 @@ func verify(sourcePath, fixturePath string) error {
 			return fmt.Errorf("missing Responses binding for %s", model)
 		}
 	}
-	for _, path := range []string{"/apimart/v1/videos/generations"} {
+	for _, path := range []string{"/apimart/v1/images/generations", "/apimart/v1/videos/generations"} {
 		route, found := registry.Generation().LookupDeclaredRoute("POST", path)
 		if !found || route.Plugin.Meta.Key != "apimart" {
 			return fmt.Errorf("missing native route %s", path)
 		}
 	}
-	for _, imageModel := range []string{"gpt-image-2", "gpt-image-2-ext", "gpt-image-2-official", "gpt-image-2.5-flare", "gpt-image-2.5-sunburst", "gpt-image-2.5-ext", "gpt-image-2-2k-medium"} {
+	for _, imageModel := range []string{"gpt-image-2", "gpt-image-2-ext", "gpt-image-2-official", "gpt-image-2.5-flare", "gpt-image-2.5-sunburst", "gpt-image-2.5-ext"} {
+		for _, path := range []string{"/v1/images/generations", "/v1/images/edits", "/v1/responses"} {
+			matched := false
+			for _, candidate := range registry.Generation().LookupEndpointCandidates("POST", path, imageModel) {
+				matched = matched || candidate.Plugin.Meta.Key == "apimart"
+			}
+			if !matched {
+				return fmt.Errorf("missing APIMart image binding for %s on %s", imageModel, path)
+			}
+		}
+		schema, _ := loaded.Meta.UsageForModel(imageModel)
+		if _, found := schema["image_count"]; !found {
+			return fmt.Errorf("missing image usage profile for %s", imageModel)
+		}
+		if _, found := schema["seconds"]; found {
+			return fmt.Errorf("video usage leaked into image profile %s", imageModel)
+		}
+	}
+	// The shared plugin serves explicit provider models. Fixed-price automatic
+	// routes retain their own selection and billing lifecycle.
+	for _, imageModel := range []string{"gpt-image", "gpt-image-2-2k-medium"} {
 		if declared, found := registry.Generation().CanonicalModel(imageModel); found {
 			if plugin, ok := registry.Generation().GetByModel(declared); ok && plugin.Meta.Key == "apimart" {
 				return fmt.Errorf("APIMart must not own image identity %s", imageModel)
@@ -69,9 +89,6 @@ func verify(sourcePath, fixturePath string) error {
 				}
 			}
 		}
-	}
-	if _, found := registry.Generation().LookupDeclaredRoute("POST", "/apimart/v1/images/generations"); found {
-		return fmt.Errorf("APIMart image submission must not be published")
 	}
 	route, found := registry.Generation().LookupDeclaredRoute("POST", "/kling/v1/videos/text2video")
 	if !found || route.Plugin.Meta.Key != "kling" {

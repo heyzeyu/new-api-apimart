@@ -74,9 +74,8 @@ func verify(sourcePath, fixturePath string) error {
 			return fmt.Errorf("video usage leaked into image profile %s", imageModel)
 		}
 	}
-	// The shared plugin serves explicit provider models. Fixed-price automatic
-	// routes retain their own selection and billing lifecycle.
-	for _, imageModel := range []string{"gpt-image", "gpt-image-2-2k-medium"} {
+	// The plugin claims explicit 1K/2K presets, never the automatic route or 4K presets.
+	for _, imageModel := range []string{"gpt-image", "gpt-image-2-4k-high"} {
 		if declared, found := registry.Generation().CanonicalModel(imageModel); found {
 			if plugin, ok := registry.Generation().GetByModel(declared); ok && plugin.Meta.Key == "apimart" {
 				return fmt.Errorf("APIMart must not own image identity %s", imageModel)

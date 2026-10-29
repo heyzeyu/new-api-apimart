@@ -20,9 +20,9 @@ for (const entry of fixture.cases) {
 test('image and video models retain distinct submit and billing contracts', () => {
   const images = plugin.meta.protocols.find(claim => claim.name === 'openai_image')?.models || [];
   const videos = plugin.meta.protocols.find(claim => claim.name === 'openai_video').models;
-  assert.equal(images.length, 6);
+  assert.equal(images.length, 38);
   assert.equal(videos.length, 5);
-  assert.equal(plugin.meta.models.length, 11);
+  assert.equal(plugin.meta.models.length, 43);
   assert.ok(plugin.meta.routes.some(route => route.path === '/apimart/v1/images/generations'));
   assert.ok(plugin.meta.routes.some(route => route.path === '/apimart/v1/videos/generations'));
   assert.equal(plugin.meta.usageSchema.seconds.unit, 'second');
@@ -35,7 +35,13 @@ test('image and video models retain distinct submit and billing contracts', () =
     assert.equal(schema[videos.includes(model) ? 'image_count' : 'seconds'], undefined);
     const intent = plugin.protocols[protocol].decodeRequest({model, body:{kind:'json',value:{prompt:'A red circle'}}});
     const request = plugin.buildSubmitRequest({...intent,upstreamModel:model,baseUrl:'https://api.apimart.ai',apiKey:'fixture-only'});
-    assert.equal(request.body.model,model);
+    const preset = /^(gpt-image-2(?:\.5-(?:flare|sunburst))?)-([12]k)-(low|medium|high|xhigh|max|auto)$/.exec(model);
+    const vendor = preset ? (preset[1] === 'gpt-image-2' ? 'gpt-image-2-official' : preset[1]) : model;
+    assert.equal(request.body.model,vendor);
+    if (preset) {
+      assert.equal(request.body.resolution,preset[2]);
+      assert.equal(request.body.quality,preset[3]);
+    }
     assert.equal(request.method,'POST');
     assert.equal(request.url, 'https://api.apimart.ai/v1/'+(protocol==='openai_video'?'videos':'images')+'/generations');
   }

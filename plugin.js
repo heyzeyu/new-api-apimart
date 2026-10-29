@@ -11,6 +11,42 @@ const IMAGE_MODELS = {
   "gpt-image-2.5-sunburst": { kind: "image", count: 4, references: 16, tokens: true, extendedQuality: true },
   "gpt-image-2.5-ext": { kind: "image", count: 4, references: 16, inline: true, ext: true },
 };
+// Public presets retain the requested identity and fix its billing parameters.
+// Only 1K/2K official models are published; raw vendor models remain compatible.
+const IMAGE_PRESETS = {
+  "gpt-image-2-1k-low": { upstream: "gpt-image-2-official", resolution: "1k", quality: "low" },
+  "gpt-image-2-1k-medium": { upstream: "gpt-image-2-official", resolution: "1k", quality: "medium" },
+  "gpt-image-2-1k-high": { upstream: "gpt-image-2-official", resolution: "1k", quality: "high" },
+  "gpt-image-2-1k-auto": { upstream: "gpt-image-2-official", resolution: "1k", quality: "auto" },
+  "gpt-image-2-2k-low": { upstream: "gpt-image-2-official", resolution: "2k", quality: "low" },
+  "gpt-image-2-2k-medium": { upstream: "gpt-image-2-official", resolution: "2k", quality: "medium" },
+  "gpt-image-2-2k-high": { upstream: "gpt-image-2-official", resolution: "2k", quality: "high" },
+  "gpt-image-2-2k-auto": { upstream: "gpt-image-2-official", resolution: "2k", quality: "auto" },
+  "gpt-image-2.5-flare-1k-low": { upstream: "gpt-image-2.5-flare", resolution: "1k", quality: "low" },
+  "gpt-image-2.5-flare-1k-medium": { upstream: "gpt-image-2.5-flare", resolution: "1k", quality: "medium" },
+  "gpt-image-2.5-flare-1k-high": { upstream: "gpt-image-2.5-flare", resolution: "1k", quality: "high" },
+  "gpt-image-2.5-flare-1k-xhigh": { upstream: "gpt-image-2.5-flare", resolution: "1k", quality: "xhigh" },
+  "gpt-image-2.5-flare-1k-max": { upstream: "gpt-image-2.5-flare", resolution: "1k", quality: "max" },
+  "gpt-image-2.5-flare-1k-auto": { upstream: "gpt-image-2.5-flare", resolution: "1k", quality: "auto" },
+  "gpt-image-2.5-flare-2k-low": { upstream: "gpt-image-2.5-flare", resolution: "2k", quality: "low" },
+  "gpt-image-2.5-flare-2k-medium": { upstream: "gpt-image-2.5-flare", resolution: "2k", quality: "medium" },
+  "gpt-image-2.5-flare-2k-high": { upstream: "gpt-image-2.5-flare", resolution: "2k", quality: "high" },
+  "gpt-image-2.5-flare-2k-xhigh": { upstream: "gpt-image-2.5-flare", resolution: "2k", quality: "xhigh" },
+  "gpt-image-2.5-flare-2k-max": { upstream: "gpt-image-2.5-flare", resolution: "2k", quality: "max" },
+  "gpt-image-2.5-flare-2k-auto": { upstream: "gpt-image-2.5-flare", resolution: "2k", quality: "auto" },
+  "gpt-image-2.5-sunburst-1k-low": { upstream: "gpt-image-2.5-sunburst", resolution: "1k", quality: "low" },
+  "gpt-image-2.5-sunburst-1k-medium": { upstream: "gpt-image-2.5-sunburst", resolution: "1k", quality: "medium" },
+  "gpt-image-2.5-sunburst-1k-high": { upstream: "gpt-image-2.5-sunburst", resolution: "1k", quality: "high" },
+  "gpt-image-2.5-sunburst-1k-xhigh": { upstream: "gpt-image-2.5-sunburst", resolution: "1k", quality: "xhigh" },
+  "gpt-image-2.5-sunburst-1k-max": { upstream: "gpt-image-2.5-sunburst", resolution: "1k", quality: "max" },
+  "gpt-image-2.5-sunburst-1k-auto": { upstream: "gpt-image-2.5-sunburst", resolution: "1k", quality: "auto" },
+  "gpt-image-2.5-sunburst-2k-low": { upstream: "gpt-image-2.5-sunburst", resolution: "2k", quality: "low" },
+  "gpt-image-2.5-sunburst-2k-medium": { upstream: "gpt-image-2.5-sunburst", resolution: "2k", quality: "medium" },
+  "gpt-image-2.5-sunburst-2k-high": { upstream: "gpt-image-2.5-sunburst", resolution: "2k", quality: "high" },
+  "gpt-image-2.5-sunburst-2k-xhigh": { upstream: "gpt-image-2.5-sunburst", resolution: "2k", quality: "xhigh" },
+  "gpt-image-2.5-sunburst-2k-max": { upstream: "gpt-image-2.5-sunburst", resolution: "2k", quality: "max" },
+  "gpt-image-2.5-sunburst-2k-auto": { upstream: "gpt-image-2.5-sunburst", resolution: "2k", quality: "auto" },
+};
 const VIDEO_MODELS = {
   "kling-v2-6": { kind: "video", maxSeconds: 10, durations: [5, 10], references: 2, audio: true },
   "kling-v3": { kind: "video", maxSeconds: 15, references: 2, audio: true, fourK: true, shots: true },
@@ -20,7 +56,46 @@ const VIDEO_MODELS = {
 };
 const MODELS = Object.assign({}, IMAGE_MODELS, VIDEO_MODELS);
 // Keep endpoint declarations statically readable by the upload preview.
-const IMAGE_MODEL_NAMES = ["gpt-image-2", "gpt-image-2-ext", "gpt-image-2-official", "gpt-image-2.5-flare", "gpt-image-2.5-sunburst", "gpt-image-2.5-ext"];
+const IMAGE_MODEL_NAMES = [
+  "gpt-image-2",
+  "gpt-image-2-ext",
+  "gpt-image-2-official",
+  "gpt-image-2.5-flare",
+  "gpt-image-2.5-sunburst",
+  "gpt-image-2.5-ext",
+  "gpt-image-2-1k-low",
+  "gpt-image-2-1k-medium",
+  "gpt-image-2-1k-high",
+  "gpt-image-2-1k-auto",
+  "gpt-image-2-2k-low",
+  "gpt-image-2-2k-medium",
+  "gpt-image-2-2k-high",
+  "gpt-image-2-2k-auto",
+  "gpt-image-2.5-flare-1k-low",
+  "gpt-image-2.5-flare-1k-medium",
+  "gpt-image-2.5-flare-1k-high",
+  "gpt-image-2.5-flare-1k-xhigh",
+  "gpt-image-2.5-flare-1k-max",
+  "gpt-image-2.5-flare-1k-auto",
+  "gpt-image-2.5-flare-2k-low",
+  "gpt-image-2.5-flare-2k-medium",
+  "gpt-image-2.5-flare-2k-high",
+  "gpt-image-2.5-flare-2k-xhigh",
+  "gpt-image-2.5-flare-2k-max",
+  "gpt-image-2.5-flare-2k-auto",
+  "gpt-image-2.5-sunburst-1k-low",
+  "gpt-image-2.5-sunburst-1k-medium",
+  "gpt-image-2.5-sunburst-1k-high",
+  "gpt-image-2.5-sunburst-1k-xhigh",
+  "gpt-image-2.5-sunburst-1k-max",
+  "gpt-image-2.5-sunburst-1k-auto",
+  "gpt-image-2.5-sunburst-2k-low",
+  "gpt-image-2.5-sunburst-2k-medium",
+  "gpt-image-2.5-sunburst-2k-high",
+  "gpt-image-2.5-sunburst-2k-xhigh",
+  "gpt-image-2.5-sunburst-2k-max",
+  "gpt-image-2.5-sunburst-2k-auto",
+];
 const VIDEO_MODEL_NAMES = ["kling-v2-6", "kling-v3", "kling-3.0-turbo", "kling-v3-omni", "kling-video-o1"];
 const RATIOS = ["1:1", "3:2", "2:3", "4:3", "3:4", "5:4", "4:5", "16:9", "9:16", "2:1", "1:2", "21:9", "9:21", "3:1", "1:3"];
 const EXT_RATIOS = ["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "2:3", "5:4", "4:5", "21:9"];
@@ -76,7 +151,7 @@ export const meta = {
   key: "apimart",
   name: "APIMart",
   icon: "text:AM",
-  version: "0.1.2",
+  version: "0.1.3",
   author: { name: "heyzeyu", url: "https://github.com/heyzeyu" },
   website: "https://github.com/heyzeyu/new-api-apimart",
   description: { en: "APIMart image and Kling video generation", zh: "APIMart 图片与可灵视频生成" },
@@ -89,6 +164,38 @@ export const meta = {
     "gpt-image-2.5-flare",
     "gpt-image-2.5-sunburst",
     "gpt-image-2.5-ext",
+    "gpt-image-2-1k-low",
+    "gpt-image-2-1k-medium",
+    "gpt-image-2-1k-high",
+    "gpt-image-2-1k-auto",
+    "gpt-image-2-2k-low",
+    "gpt-image-2-2k-medium",
+    "gpt-image-2-2k-high",
+    "gpt-image-2-2k-auto",
+    "gpt-image-2.5-flare-1k-low",
+    "gpt-image-2.5-flare-1k-medium",
+    "gpt-image-2.5-flare-1k-high",
+    "gpt-image-2.5-flare-1k-xhigh",
+    "gpt-image-2.5-flare-1k-max",
+    "gpt-image-2.5-flare-1k-auto",
+    "gpt-image-2.5-flare-2k-low",
+    "gpt-image-2.5-flare-2k-medium",
+    "gpt-image-2.5-flare-2k-high",
+    "gpt-image-2.5-flare-2k-xhigh",
+    "gpt-image-2.5-flare-2k-max",
+    "gpt-image-2.5-flare-2k-auto",
+    "gpt-image-2.5-sunburst-1k-low",
+    "gpt-image-2.5-sunburst-1k-medium",
+    "gpt-image-2.5-sunburst-1k-high",
+    "gpt-image-2.5-sunburst-1k-xhigh",
+    "gpt-image-2.5-sunburst-1k-max",
+    "gpt-image-2.5-sunburst-1k-auto",
+    "gpt-image-2.5-sunburst-2k-low",
+    "gpt-image-2.5-sunburst-2k-medium",
+    "gpt-image-2.5-sunburst-2k-high",
+    "gpt-image-2.5-sunburst-2k-xhigh",
+    "gpt-image-2.5-sunburst-2k-max",
+    "gpt-image-2.5-sunburst-2k-auto",
     "kling-v2-6",
     "kling-v3",
     "kling-3.0-turbo",
@@ -103,11 +210,52 @@ export const meta = {
   usageProfiles: [
     { models: ["gpt-image-2", "gpt-image-2-ext"], schema: IMAGE_SCHEMA },
     {
-      models: ["gpt-image-2-official"],
+      models: [
+        "gpt-image-2-official",
+        "gpt-image-2-1k-low",
+        "gpt-image-2-1k-medium",
+        "gpt-image-2-1k-high",
+        "gpt-image-2-1k-auto",
+        "gpt-image-2-2k-low",
+        "gpt-image-2-2k-medium",
+        "gpt-image-2-2k-high",
+        "gpt-image-2-2k-auto",
+      ],
       schema: TOKEN_SCHEMA,
       examples: [{ label: "1K medium", facts: Object.assign({}, TOKEN_EXAMPLE, { output_tokens: 1056 }) }],
     },
-    { models: ["gpt-image-2.5-flare", "gpt-image-2.5-sunburst"], schema: EXTENDED_TOKEN_SCHEMA, examples: [{ label: "1K medium", facts: TOKEN_EXAMPLE }] },
+    {
+      models: [
+        "gpt-image-2.5-flare",
+        "gpt-image-2.5-sunburst",
+        "gpt-image-2.5-flare-1k-low",
+        "gpt-image-2.5-flare-1k-medium",
+        "gpt-image-2.5-flare-1k-high",
+        "gpt-image-2.5-flare-1k-xhigh",
+        "gpt-image-2.5-flare-1k-max",
+        "gpt-image-2.5-flare-1k-auto",
+        "gpt-image-2.5-flare-2k-low",
+        "gpt-image-2.5-flare-2k-medium",
+        "gpt-image-2.5-flare-2k-high",
+        "gpt-image-2.5-flare-2k-xhigh",
+        "gpt-image-2.5-flare-2k-max",
+        "gpt-image-2.5-flare-2k-auto",
+        "gpt-image-2.5-sunburst-1k-low",
+        "gpt-image-2.5-sunburst-1k-medium",
+        "gpt-image-2.5-sunburst-1k-high",
+        "gpt-image-2.5-sunburst-1k-xhigh",
+        "gpt-image-2.5-sunburst-1k-max",
+        "gpt-image-2.5-sunburst-1k-auto",
+        "gpt-image-2.5-sunburst-2k-low",
+        "gpt-image-2.5-sunburst-2k-medium",
+        "gpt-image-2.5-sunburst-2k-high",
+        "gpt-image-2.5-sunburst-2k-xhigh",
+        "gpt-image-2.5-sunburst-2k-max",
+        "gpt-image-2.5-sunburst-2k-auto",
+      ],
+      schema: EXTENDED_TOKEN_SCHEMA,
+      examples: [{ label: "1K medium", facts: TOKEN_EXAMPLE }],
+    },
     {
       models: ["gpt-image-2.5-ext"],
       schema: Object.assign({}, IMAGE_SCHEMA, { version: { enum: ["flare", "sunburst"], description: { en: "Image model version", zh: "图片模型版本" } } }),
@@ -142,8 +290,13 @@ function object(value, label) {
   return value;
 }
 function specFor(model) {
+  model = vendorModel(model);
   if (!Object.prototype.hasOwnProperty.call(MODELS, model)) throw new Error("Unsupported APIMart model");
   return MODELS[model];
+}
+function vendorModel(model) {
+  const preset = IMAGE_PRESETS[model];
+  return preset ? preset.upstream : model;
 }
 function choice(value, fallback, options, label) {
   if (value === undefined) return fallback;
@@ -196,11 +349,20 @@ const VIDEO_FIELDS = [
   "video_list",
 ];
 
-function normalizedImage(model, source) {
+function normalizedImage(model, source, requestedModel) {
   const spec = specFor(model),
+    preset = IMAGE_PRESETS[requestedModel || model],
     req = {};
   if (spec.kind !== "image") throw new Error("An image model is required");
   for (const key of IMAGE_FIELDS) if (source[key] !== undefined) req[key] = source[key];
+  if (preset) {
+    if (vendorModel(model) !== preset.upstream) throw new Error("The image preset does not match the mapped APIMart model");
+    if (req.resolution !== undefined && String(req.resolution).toLowerCase() !== preset.resolution)
+      throw new Error("resolution must match the image model preset");
+    if (req.quality !== undefined && req.quality !== preset.quality) throw new Error("quality must match the image model preset");
+    req.resolution = preset.resolution;
+    req.quality = preset.quality;
+  }
   req.prompt = text(req.prompt);
   if (!req.prompt || req.prompt.length > 32000) throw new Error("prompt must contain 1 to 32000 characters");
   req.n = integer(req.n === undefined ? 1 : req.n, 1, spec.count, "n");
@@ -226,6 +388,7 @@ function normalizedImage(model, source) {
       req.resolution = pixels > 5242880 ? "4k" : pixels > 1572864 ? "2k" : "1k";
     }
   }
+  if (preset && req.resolution !== preset.resolution) throw new Error("Image dimensions must match the model resolution preset");
   if (spec.tokens) {
     req.quality = choice(
       req.quality,
@@ -397,7 +560,7 @@ function decodedRequest(ctx, kind, responses) {
     files = ctx.body.files || [];
   } else throw new Error("A JSON or supported multipart body is required");
   const model = text(ctx.model) || text(source.model),
-    upstreamModel = text(ctx.upstreamModel) || model;
+    upstreamModel = vendorModel(text(ctx.upstreamModel) || model);
   const spec = specFor(upstreamModel);
   if (kind && spec.kind !== kind) throw new Error("The model does not support this endpoint");
   const params = Object.assign({}, source.metadata === undefined ? {} : object(source.metadata, "metadata"), source);
@@ -503,7 +666,7 @@ function decodedRequest(ctx, kind, responses) {
     }
   }
   if (spec.kind === "image" && ctx.operation === "edit" && !images.length) throw new Error("Image editing requires a reference image");
-  const body = spec.kind === "image" ? normalizedImage(upstreamModel, params) : normalizedVideo(upstreamModel, params);
+  const body = spec.kind === "image" ? normalizedImage(upstreamModel, params, model) : normalizedVideo(upstreamModel, params);
   return {
     kind: "submit",
     model: model,
@@ -531,9 +694,10 @@ function authorization(ctx) {
   return { Authorization: text(ctx.authHeader) || "Bearer " + ctx.apiKey };
 }
 export function buildSubmitRequest(ctx) {
-  const model = ctx.upstreamModel || ctx.model,
+  const model = vendorModel(ctx.upstreamModel || ctx.model),
     spec = specFor(model);
-  const body = spec.kind === "image" ? normalizedImage(model, object(ctx.requestBody, "request")) : normalizedVideo(model, object(ctx.requestBody, "request"));
+  const body =
+    spec.kind === "image" ? normalizedImage(model, object(ctx.requestBody, "request"), ctx.model) : normalizedVideo(model, object(ctx.requestBody, "request"));
   body.model = model;
   if (spec.ext) body.resolution = body.resolution.toUpperCase();
   return {
@@ -560,7 +724,9 @@ export function parseSubmitResponse(ctx, response) {
   if (!id || id.length > 256 || !/^[A-Za-z0-9_-]+$/.test(id)) throw new Error("APIMart task ID is invalid");
   const spec = specFor(ctx.upstreamModel || ctx.model);
   const request =
-    spec.kind === "image" ? normalizedImage(ctx.upstreamModel || ctx.model, ctx.requestBody) : normalizedVideo(ctx.upstreamModel || ctx.model, ctx.requestBody);
+    spec.kind === "image"
+      ? normalizedImage(vendorModel(ctx.upstreamModel || ctx.model), ctx.requestBody, ctx.model)
+      : normalizedVideo(ctx.upstreamModel || ctx.model, ctx.requestBody);
   return {
     taskId: id,
     taskData: body,
@@ -619,9 +785,9 @@ export function parseTaskResult(ctx, body) {
 export function extractUsage(ctx) {
   // These are quantities for task expressions, not multiplicative legacy ratios.
   if (ctx.usagePurpose === "billing_ratios") return null;
-  const model = ctx.upstreamModel || ctx.model,
+  const model = vendorModel(ctx.upstreamModel || ctx.model),
     spec = specFor(model);
-  const req = spec.kind === "image" ? normalizedImage(model, ctx.requestBody) : normalizedVideo(model, ctx.requestBody);
+  const req = spec.kind === "image" ? normalizedImage(model, ctx.requestBody, ctx.model) : normalizedVideo(model, ctx.requestBody);
   if (spec.kind === "video")
     return spec.turbo ? { seconds: req.duration, resolution: req.resolution } : { seconds: req.duration, mode: req.mode, audio: !!req.audio };
   const facts = { image_count: req.n, resolution: req.resolution };

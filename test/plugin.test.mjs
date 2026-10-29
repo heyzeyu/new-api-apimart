@@ -17,18 +17,22 @@ for (const entry of fixture.cases) {
   });
 }
 
-test('declared video models retain submit contracts without claiming image requests', () => {
+test('image and video models retain distinct submit and billing contracts', () => {
   const images = plugin.meta.protocols.find(claim => claim.name === 'openai_image')?.models || [];
   const videos = plugin.meta.protocols.find(claim => claim.name === 'openai_video').models;
-  assert.equal(images.length, 0);
-  assert.equal(plugin.meta.models.length, 5);
-  assert.deepEqual(plugin.meta.protocols.find(claim => claim.name === 'openai_responses').models, videos);
-  assert.ok(plugin.meta.models.every(model => model.startsWith('kling-')));
-  assert.ok(plugin.meta.routes.every(route => !route.path.includes('/images/')));
+  assert.equal(images.length, 6);
+  assert.equal(videos.length, 5);
+  assert.equal(plugin.meta.models.length, 11);
+  assert.ok(plugin.meta.routes.some(route => route.path === '/apimart/v1/images/generations'));
+  assert.ok(plugin.meta.routes.some(route => route.path === '/apimart/v1/videos/generations'));
+  assert.equal(plugin.meta.usageSchema.seconds.unit, 'second');
   assert.deepEqual([...images, ...videos].sort(), [...plugin.meta.models].sort());
   assert.equal(new Set(plugin.meta.models).size, plugin.meta.models.length);
   for (const model of plugin.meta.models) {
     const protocol = videos.includes(model) ? 'openai_video' : 'openai_image';
+    const schema = plugin.meta.usageProfiles.find(profile => profile.models.includes(model)).schema;
+    assert.equal(schema[videos.includes(model) ? 'seconds' : 'image_count'].unit, videos.includes(model) ? 'second' : 'count');
+    assert.equal(schema[videos.includes(model) ? 'image_count' : 'seconds'], undefined);
     const intent = plugin.protocols[protocol].decodeRequest({model, body:{kind:'json',value:{prompt:'A red circle'}}});
     const request = plugin.buildSubmitRequest({...intent,upstreamModel:model,baseUrl:'https://api.apimart.ai',apiKey:'fixture-only'});
     assert.equal(request.body.model,model);

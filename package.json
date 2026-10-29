@@ -1,10 +1,10 @@
 {
   "name": "new-api-apimart",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "license": "AGPL-3.0-only",
-  "description": "Standalone APIMart Kling video task plugin for new-api",
+  "description": "Standalone APIMart image and Kling video task plugin for new-api",
   "scripts": {
     "test": "node --test test/plugin.test.mjs",
     "check": "node --check plugin.js && node scripts/marketplace.mjs --check && node --test test/plugin.test.mjs",
